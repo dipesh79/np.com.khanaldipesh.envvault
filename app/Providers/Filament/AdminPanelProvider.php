@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use AchyutN\FilamentLogViewer\FilamentLogViewer;
 use App\Models\User;
 use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
 use Filament\Actions\Action;
@@ -69,6 +70,8 @@ class AdminPanelProvider extends PanelProvider
                     ->setTitle('Profile')
                     ->shouldRegisterNavigation(false)
                     ->shouldShowDeleteAccountForm(false),
+                FilamentLogViewer::make()
+                    ->authorize(fn (): bool => auth()->check() && auth()->user()->is_admin),
             ])
             ->userMenuItems([
                 'profile' => Action::make('profile')
