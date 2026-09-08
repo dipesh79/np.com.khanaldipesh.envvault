@@ -46,9 +46,9 @@ class UserInfolist
                             ->label('Email Verified')
                             ->dateTime()
                             ->badge()
-                            ->color(fn($state) => $state ? 'success' : 'danger')
-                            ->formatStateUsing(fn($state) => $state ? $state->format('M d, Y H:i') : 'Not Verified')
-                            ->icon(fn($state) => $state ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle')
+                            ->color(fn ($state) => $state ? 'success' : 'danger')
+                            ->formatStateUsing(fn ($state) => $state ? $state->format('M d, Y H:i') : 'Not Verified')
+                            ->icon(fn ($state) => $state ? 'heroicon-o-check-circle' : 'heroicon-o-x-circle')
                             ->columnSpan(1),
 
                     ]),

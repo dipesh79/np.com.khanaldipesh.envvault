@@ -60,8 +60,8 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentDeveloperLoginsPlugin::make()
-                    ->enabled(!app()->isProduction())
-                    ->users(fn() => User::query()
+                    ->enabled(! app()->isProduction())
+                    ->users(fn () => User::query()
                         ->where('is_admin', true)
                         ->pluck('email', 'email')
                         ->toArray()),
