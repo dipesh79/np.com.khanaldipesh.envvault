@@ -79,8 +79,8 @@ class UsersTable
                     ->trueLabel('Verified only')
                     ->falseLabel('Unverified only')
                     ->queries(
-                        true: fn(Builder $query) => $query->whereNotNull('email_verified_at'),
-                        false: fn(Builder $query) => $query->whereNull('email_verified_at'),
+                        true: fn (Builder $query) => $query->whereNotNull('email_verified_at'),
+                        false: fn (Builder $query) => $query->whereNull('email_verified_at'),
                     ),
 
                 SelectFilter::make('created_at')
@@ -93,7 +93,7 @@ class UsersTable
                         'last_month' => 'Last Month',
                     ])
                     ->query(callback: function (Builder $query, array $data) {
-                        if (!$data['value']) {
+                        if (! $data['value']) {
                             return;
                         }
 

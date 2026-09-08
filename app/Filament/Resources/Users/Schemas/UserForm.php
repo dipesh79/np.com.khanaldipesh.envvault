@@ -51,10 +51,10 @@ class UserForm
                         TextInput::make('password')
                             ->label('Password')
                             ->password()
-                            ->required(fn($livewire) => $livewire instanceof CreateRecord)
+                            ->required(fn ($livewire) => $livewire instanceof CreateRecord)
                             ->minLength(8)
                             ->same('passwordConfirmation')
-                            ->dehydrated(fn($state) => filled($state))
+                            ->dehydrated(fn ($state) => filled($state))
                             ->placeholder('Enter new password')
                             ->helperText('Minimum 8 characters')
                             ->columnSpan(1),
@@ -62,11 +62,11 @@ class UserForm
                         TextInput::make('passwordConfirmation')
                             ->label('Confirm Password')
                             ->password()
-                            ->required(fn($get) => filled($get('password')))
+                            ->required(fn ($get) => filled($get('password')))
                             ->placeholder('Confirm your password')
                             ->dehydrated(false)
                             ->columnSpan(1),
-                    ])
+                    ]),
             ]);
     }
 }
