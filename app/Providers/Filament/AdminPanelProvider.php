@@ -63,7 +63,7 @@ class AdminPanelProvider extends PanelProvider
                     ->enabled(! app()->isProduction())
                     ->users(fn () => User::query()
                         ->where('is_admin', true)
-                        ->pluck('email', 'email')
+                        ->pluck('email', 'name')
                         ->toArray()),
                 FilamentEditProfilePlugin::make()
                     ->slug('profile')

@@ -2,6 +2,8 @@
 
 namespace App\Providers\Filament;
 
+use App\Models\User;
+use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
 use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -51,6 +53,12 @@ class AppPanelProvider extends PanelProvider
                     ->setTitle('Profile')
                     ->shouldRegisterNavigation(false)
                     ->shouldShowDeleteAccountForm(false),
+                FilamentDeveloperLoginsPlugin::make()
+                    ->enabled(! app()->isProduction())
+                    ->users(fn () => User::query()
+                        ->where('is_admin', false)
+                        ->pluck('email', 'name')
+                        ->toArray()),
             ])
             ->userMenuItems([
                 'profile' => Action::make('profile')
