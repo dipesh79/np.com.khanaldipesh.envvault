@@ -4,21 +4,25 @@ namespace App\Models;
 
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasTenants;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable implements MustVerifyEmail, FilamentUser
+class User extends Authenticatable implements MustVerifyEmail, FilamentUser, HasTenants
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    public function organizations(): HasMany
+    public function ownerOrganizations(): HasMany
     {
         return $this->hasMany(Organization::class, 'owner_id', 'id');
     }
@@ -30,6 +34,23 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         } else {
             return true;
         }
+    }
+
+    public function organizations(): BelongsToMany
+    {
+        return $this->belongsToMany(Organization::class)
+            ->using(OrganizationUser::class)
+            ->withTimestamps()
+            ->withPivot(['role']);
+    }
+    public function getTenants(Panel $panel): array|Collection
+    {
+        return $this->organizations;
+    }
+
+    public function canAccessTenant(Model $tenant): bool
+    {
+        return $this->organizations()->whereKey($tenant)->exists();
     }
 
     /**
@@ -45,4 +66,6 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
             'is_admin' => 'boolean',
         ];
     }
+
+
 }

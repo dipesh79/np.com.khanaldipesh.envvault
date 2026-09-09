@@ -2,9 +2,13 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\App\Pages\EditOrganizationProfile;
+use App\Filament\App\Pages\RegisterOrganization;
+use App\Models\Organization;
 use App\Models\User;
 use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
 use Filament\Actions\Action;
+use Filament\Facades\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -14,7 +18,6 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
@@ -32,6 +35,9 @@ class AppPanelProvider extends PanelProvider
             ->id('app')
             ->path('app')
             ->login()
+            ->tenant(Organization::class,slugAttribute: 'slug')
+            ->tenantRegistration(RegisterOrganization::class)
+            ->tenantProfile(EditOrganizationProfile::class)
             ->registration()
             ->passwordReset()
             ->emailVerification()
@@ -49,21 +55,24 @@ class AppPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentEditProfilePlugin::make()
-                    ->slug('profile')
+                    ->slug('user/profile')
                     ->setTitle('Profile')
                     ->shouldRegisterNavigation(false)
                     ->shouldShowDeleteAccountForm(false),
                 FilamentDeveloperLoginsPlugin::make()
-                    ->enabled(! app()->isProduction())
-                    ->users(fn () => User::query()
+                    ->enabled(!app()->isProduction())
+                    ->users(fn() => User::query()
                         ->where('is_admin', false)
                         ->pluck('email', 'name')
                         ->toArray()),
             ])
             ->userMenuItems([
                 'profile' => Action::make('profile')
-                    ->label(fn () => auth()->user()->name)
-                    ->url(fn (): string => EditProfilePage::getUrl())
+                    ->label(fn() => auth()->user()->name)
+                    ->visible(function (): bool {
+                        return auth()->user()->organizations()->exists() && Filament::getTenant();
+                    })
+                    ->url(fn(): string => EditProfilePage::getUrl())
                     ->icon('heroicon-m-user-circle'),
             ])
             ->middleware([
