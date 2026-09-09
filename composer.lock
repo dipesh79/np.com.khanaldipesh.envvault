@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba8e7f795b4cad3a450dc36b6ef104ea",
+    "content-hash": "abb1268a41f9056f37131cf977469efb",
     "packages": [
         {
             "name": "achyutn/filament-log-viewer",
@@ -928,6 +928,63 @@
                 "source": "https://github.com/dflydev/dflydev-dot-access-data/tree/v3.0.3"
             },
             "time": "2024-07-08T12:26:09+00:00"
+        },
+        {
+            "name": "dipesh79/laravel-mail-log-viewer",
+            "version": "1.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dipesh79/LaravelMailLogViewer.git",
+                "reference": "20db8305b0168fe258345c8c9becaace5c74ff65"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dipesh79/LaravelMailLogViewer/zipball/20db8305b0168fe258345c8c9becaace5c74ff65",
+                "reference": "20db8305b0168fe258345c8c9becaace5c74ff65",
+                "shasum": ""
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Dipesh79\\LaravelMailLogViewer\\LaravelMailLogViewerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Dipesh79\\LaravelMailLogViewer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dipesh Khanal",
+                    "email": "dipeshkhanal79@gmail.com",
+                    "homepage": "https://khanaldipesh.com.np",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Laravel package to view all email addresses stored in the log files, intended for development purposes only.",
+            "keywords": [
+                "laravel",
+                "log",
+                "mail"
+            ],
+            "support": {
+                "issues": "https://github.com/dipesh79/LaravelMailLogViewer/issues",
+                "source": "https://github.com/dipesh79/LaravelMailLogViewer/tree/1.0.4"
+            },
+            "funding": [
+                {
+                    "url": "https://www.patreon.com/dipeshkhanal",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2026-08-12T05:48:41+00:00"
         },
         {
             "name": "doctrine/inflector",
