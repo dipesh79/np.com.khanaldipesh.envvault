@@ -62,7 +62,6 @@ class AppPanelProvider extends PanelProvider
                 FilamentDeveloperLoginsPlugin::make()
                     ->enabled(!app()->isProduction())
                     ->users(fn() => User::query()
-                        ->where('is_admin', false)
                         ->pluck('email', 'name')
                         ->toArray()),
             ])

@@ -17,7 +17,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable implements MustVerifyEmail, FilamentUser, HasTenants
+class User extends Authenticatable implements FilamentUser, HasTenants, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
@@ -36,13 +36,6 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
         }
     }
 
-    public function organizations(): BelongsToMany
-    {
-        return $this->belongsToMany(Organization::class)
-            ->using(OrganizationUser::class)
-            ->withTimestamps()
-            ->withPivot(['role']);
-    }
     public function getTenants(Panel $panel): array|Collection
     {
         return $this->organizations;
@@ -51,6 +44,21 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
     public function canAccessTenant(Model $tenant): bool
     {
         return $this->organizations()->whereKey($tenant)->exists();
+    }
+
+    public function organizations(): BelongsToMany
+    {
+        return $this->belongsToMany(Organization::class)
+            ->using(OrganizationUser::class)
+            ->withTimestamps()
+            ->withPivot(['role']);
+    }
+
+    public function teams(): BelongsToMany
+    {
+        return $this->belongsToMany(Team::class)
+            ->using(TeamUser::class)
+            ->withTimestamps();
     }
 
     /**
@@ -66,6 +74,4 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser, Has
             'is_admin' => 'boolean',
         ];
     }
-
-
 }

@@ -2,9 +2,7 @@
 
 namespace App\Filament\App\Pages;
 
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Pages\Page;
 use Filament\Pages\Tenancy\EditTenantProfile;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
