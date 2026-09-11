@@ -6,6 +6,7 @@ use App\Enums\OrganizationUserRole;
 use App\Filament\App\Clusters\User\UserCluster;
 use App\Models\Invitation;
 use App\Models\OrganizationUser;
+use App\Models\Team;
 use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Facades\Filament;
@@ -79,6 +80,13 @@ class Users extends Page implements HasTable
                     ->hidden(fn ($record) => $record->organization->owner_id === $record->user_id)
                     ->action(function ($record) {
                         $record->delete();
+                        $record->organization->users()->detach($record->user_id);
+
+                        $teams = Team::where('organization_id', $record->organization_id)->get();
+                        foreach ($teams as $team) {
+                            $team->users()->detach($record->user_id);
+                        }
+
                         Notification::make('success')
                             ->title('User removed from organization')
                             ->success()
