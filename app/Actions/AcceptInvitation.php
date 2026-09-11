@@ -22,6 +22,7 @@ class AcceptInvitation
             }
 
             $invitation->update(['accepted_at' => now()]);
+            $invitation->delete();
         });
     }
 }
