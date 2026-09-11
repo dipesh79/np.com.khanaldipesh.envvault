@@ -66,6 +66,7 @@ class ProjectForm
                                     ->searchable()
                                     ->preload()
                                     ->required()
+                                    ->distinct()
                                     ->columnSpan(1),
 
                                 Select::make('role')
