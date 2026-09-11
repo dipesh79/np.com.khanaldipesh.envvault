@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\App\Clusters\User\UserCluster;
 use App\Filament\App\Pages\EditOrganizationProfile;
 use App\Filament\App\Pages\InvitationRegister;
 use App\Filament\App\Pages\RegisterOrganization;
@@ -40,6 +41,17 @@ class AppPanelProvider extends PanelProvider
             ->tenantRegistration(RegisterOrganization::class)
             ->tenantProfile(EditOrganizationProfile::class)
             ->registration(InvitationRegister::class)
+            ->tenantMenuItems([
+                Action::make('profile')
+                    ->url(fn(): string => EditOrganizationProfile::getUrl())
+                    ->label('Organization Profile')
+                    ->icon('heroicon-m-cog-8-tooth'),
+                Action::make('users')
+                    ->url(fn(): string => UserCluster::getUrl())
+                    ->label('Users')
+                    ->icon('heroicon-m-users'),
+
+            ])
             ->passwordReset()
             ->emailVerification()
             ->colors([
@@ -62,18 +74,18 @@ class AppPanelProvider extends PanelProvider
                     ->shouldRegisterNavigation(false)
                     ->shouldShowDeleteAccountForm(false),
                 FilamentDeveloperLoginsPlugin::make()
-                    ->enabled(! app()->isProduction())
-                    ->users(fn () => User::query()
+                    ->enabled(!app()->isProduction())
+                    ->users(fn() => User::query()
                         ->pluck('email', 'name')
                         ->toArray()),
             ])
             ->userMenuItems([
                 'profile' => Action::make('profile')
-                    ->label(fn () => auth()->user()->name)
+                    ->label(fn() => auth()->user()->name)
                     ->visible(function (): bool {
                         return auth()->user()->organizations()->exists() && Filament::getTenant();
                     })
-                    ->url(fn (): string => EditProfilePage::getUrl())
+                    ->url(fn(): string => EditProfilePage::getUrl())
                     ->icon('heroicon-m-user-circle'),
             ])
             ->middleware([

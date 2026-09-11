@@ -8,5 +8,7 @@ use Filament\Support\Icons\Heroicon;
 
 class UserCluster extends Cluster
 {
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Users;
 }
