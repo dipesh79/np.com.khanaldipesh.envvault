@@ -21,14 +21,18 @@ use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class Users extends Page implements HasTable
 {
     use InteractsWithTable;
 
     protected static string|null|\BackedEnum $navigationIcon = Heroicon::Users;
+
     protected static ?string $cluster = UserCluster::class;
+
     protected string $view = 'filament.app.pages.users';
+
     protected ?string $subheading = 'Manage users';
 
     public function table(Table $table): Table
@@ -40,7 +44,7 @@ class Users extends Page implements HasTable
                     ->searchable()
                     ->label('Name'),
                 TextColumn::make('role')
-                    ->formatStateUsing(fn($state) => ucfirst($state))
+                    ->formatStateUsing(fn ($state) => ucfirst($state))
                     ->badge()
                     ->label('Role'),
                 TextColumn::make('created_at')
@@ -52,13 +56,13 @@ class Users extends Page implements HasTable
                     ->label('Update Role')
                     ->icon('heroicon-o-pencil-square')
                     ->color('primary')
-                    ->hidden(fn($record) => $record->organization->owner_id === $record->user_id)
+                    ->hidden(fn ($record) => $record->organization->owner_id === $record->user_id)
                     ->schema([
                         Select::make('role')
                             ->options(OrganizationUserRole::class)
                             ->searchable()
                             ->preload()
-                            ->default(fn($record) => $record->role),
+                            ->default(fn ($record) => $record->role),
                     ])
                     ->action(function ($record, array $data) {
                         $record->update(['role' => $data['role']]);
@@ -72,7 +76,7 @@ class Users extends Page implements HasTable
                     ->requiresConfirmation()
                     ->color('danger')
                     ->icon('heroicon-o-trash')
-                    ->hidden(fn($record) => $record->organization->owner_id === $record->user_id)
+                    ->hidden(fn ($record) => $record->organization->owner_id === $record->user_id)
                     ->action(function ($record) {
                         $record->delete();
                         Notification::make('success')
@@ -85,7 +89,7 @@ class Users extends Page implements HasTable
                     ->requiresConfirmation()
                     ->color('warning')
                     ->icon('heroicon-o-arrow-right-on-rectangle')
-                    ->hidden(fn($record) => $record->organization->owner_id === $record->user_id)
+                    ->hidden(fn ($record) => $record->organization->owner_id === $record->user_id)
                     ->action(function ($record) {
                         $record->organization->update(['owner_id' => $record->user_id]);
                         $record->update(['role' => OrganizationUserRole::OWNER->value]);
@@ -118,8 +122,8 @@ class Users extends Page implements HasTable
                         ->hint('Check this if the user is already a member of the organization.'),
                     Select::make('user_id')
                         ->label('User')
-                        ->required(fn($get) => $get('existing_user'))
-                        ->hidden(fn($get) => !$get('existing_user'))
+                        ->required(fn ($get) => $get('existing_user'))
+                        ->hidden(fn ($get) => ! $get('existing_user'))
                         ->options(function () {
                             $users = User::all()->pluck('email', 'id')->toArray();
                             $existingUsers = OrganizationUser::where('organization_id',
@@ -130,8 +134,8 @@ class Users extends Page implements HasTable
                         ->searchable(),
                     TextInput::make('email')
                         ->label('Email')
-                        ->required(fn($get) => !$get('existing_user'))
-                        ->hidden(fn($get) => $get('existing_user'))
+                        ->required(fn ($get) => ! $get('existing_user'))
+                        ->hidden(fn ($get) => $get('existing_user'))
                         ->hint('This will be the email address of the user that will be invited.')
                         ->hintColor('primary'),
 
@@ -142,7 +146,7 @@ class Users extends Page implements HasTable
                             'organization_id' => $data['organization_id'],
                             'inviter_id' => auth()->id(),
                             'role' => $data['role'],
-                            'token' => fake()->uuid(),
+                            'token' => Str::random(60),
                             'expires_at' => now()->addDays(7),
                         ];
                         if ($data['existing_user']) {
@@ -159,6 +163,7 @@ class Users extends Page implements HasTable
                             ->body($e->getMessage())
                             ->danger()
                             ->send();
+
                         return;
                     }
                     DB::commit();

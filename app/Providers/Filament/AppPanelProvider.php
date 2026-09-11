@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\App\Pages\EditOrganizationProfile;
+use App\Filament\App\Pages\InvitationRegister;
 use App\Filament\App\Pages\RegisterOrganization;
 use App\Models\Organization;
 use App\Models\User;
@@ -38,7 +39,7 @@ class AppPanelProvider extends PanelProvider
             ->tenant(Organization::class, slugAttribute: 'slug')
             ->tenantRegistration(RegisterOrganization::class)
             ->tenantProfile(EditOrganizationProfile::class)
-            ->registration()
+            ->registration(InvitationRegister::class)
             ->passwordReset()
             ->emailVerification()
             ->colors([

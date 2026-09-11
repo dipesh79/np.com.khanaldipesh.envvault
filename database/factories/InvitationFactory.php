@@ -6,6 +6,7 @@ use App\Models\Invitation;
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Invitation>
@@ -25,7 +26,7 @@ class InvitationFactory extends Factory
             'invitee_id' => User::factory()->create()->id,
             'role' => 'user',
             'email' => fake()->email(),
-            'token' => fake()->uuid(),
+            'token' => Str::random(60),
             'expires_at' => now()->addDays(7),
             'accepted_at' => null,
             'rejected_at' => null,

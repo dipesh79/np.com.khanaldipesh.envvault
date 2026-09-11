@@ -54,7 +54,7 @@ class RegisterOrganization extends RegisterTenant
             ...parent::getFormActions(),
             Action::make('back')
                 ->label('Back')
-                ->url('/app')
+                ->url('/app'),
         ];
     }
 }

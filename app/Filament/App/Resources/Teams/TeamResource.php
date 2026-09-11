@@ -23,7 +23,7 @@ class TeamResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::UserGroup;
 
-    protected static string | UnitEnum | null $navigationGroup = 'Organization Management';
+    protected static string|UnitEnum|null $navigationGroup = 'Organization Management';
 
     protected static ?int $navigationSort = 3;
 

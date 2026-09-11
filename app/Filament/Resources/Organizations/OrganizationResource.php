@@ -11,11 +11,11 @@ use App\Filament\Resources\Organizations\Schemas\OrganizationInfolist;
 use App\Filament\Resources\Organizations\Tables\OrganizationsTable;
 use App\Models\Organization;
 use BackedEnum;
-use UnitEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class OrganizationResource extends Resource
 {
@@ -24,6 +24,7 @@ class OrganizationResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::BuildingLibrary;
 
     protected static string|UnitEnum|null $navigationGroup = 'Organization Management';
+
     protected static ?int $navigationSort = 2;
 
     protected static ?string $recordTitleAttribute = 'name';

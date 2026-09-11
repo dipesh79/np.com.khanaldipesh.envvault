@@ -45,7 +45,7 @@ class InvitedUsers extends Page implements HasTable
                 TextColumn::make('role')
                     ->label('Role')
                     ->badge()
-                    ->formatStateUsing(fn($state) => ucfirst($state->value)),
+                    ->formatStateUsing(fn ($state) => ucfirst($state->value)),
                 TextColumn::make('email')
                     ->label('Email')
                     ->copyable()
@@ -53,15 +53,15 @@ class InvitedUsers extends Page implements HasTable
                     ->default('N/A'),
                 TextColumn::make('expires_at')
                     ->label('Expires')
-                    ->formatStateUsing(fn($state) => $state ? Carbon::parse($state)->diffForHumans() : 'N/A'),
+                    ->formatStateUsing(fn ($state) => $state ? Carbon::parse($state)->diffForHumans() : 'N/A'),
                 TextColumn::make('accepted_at')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Accepted')
-                    ->formatStateUsing(fn($state) => $state ? Carbon::parse($state)->diffForHumans() : 'N/A'),
+                    ->formatStateUsing(fn ($state) => $state ? Carbon::parse($state)->diffForHumans() : 'N/A'),
                 TextColumn::make('rejected_at')
                     ->toggleable(isToggledHiddenByDefault: true)
                     ->label('Rejected')
-                    ->formatStateUsing(fn($state) => $state ? Carbon::parse($state)->diffForHumans() : 'N/A'),
+                    ->formatStateUsing(fn ($state) => $state ? Carbon::parse($state)->diffForHumans() : 'N/A'),
             ])
             ->recordActions([
                 Action::make('delete')
@@ -91,8 +91,8 @@ class InvitedUsers extends Page implements HasTable
                                 ->title('Invitations deleted')
                                 ->success()
                                 ->send();
-                        })
-                ])
+                        }),
+                ]),
 
             ]);
     }
