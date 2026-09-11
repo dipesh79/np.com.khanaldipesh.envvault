@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Project;
 use App\Models\Team;
 use Closure;
 use Filament\Facades\Filament;
@@ -19,6 +20,11 @@ class ApplyTenantScopes
     public function handle(Request $request, Closure $next): Response
     {
         Team::addGlobalScope(
+            'tenant',
+            fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()),
+        );
+
+        Project::addGlobalScope(
             'tenant',
             fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()),
         );
