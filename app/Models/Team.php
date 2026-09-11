@@ -24,4 +24,12 @@ class Team extends Model
     {
         return $this->belongsTo(Organization::class, 'organization_id');
     }
+
+    public function projects(): BelongsToMany
+    {
+        return $this->belongsToMany(Project::class)
+            ->using(ProjectTeam::class)
+            ->withTimestamps()
+            ->withPivot(['role']);
+    }
 }

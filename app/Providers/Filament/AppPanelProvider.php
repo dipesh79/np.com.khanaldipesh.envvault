@@ -6,6 +6,7 @@ use App\Filament\App\Clusters\User\UserCluster;
 use App\Filament\App\Pages\EditOrganizationProfile;
 use App\Filament\App\Pages\InvitationRegister;
 use App\Filament\App\Pages\RegisterOrganization;
+use App\Http\Middleware\ApplyTenantScopes;
 use App\Models\Organization;
 use App\Models\User;
 use DutchCodingCompany\FilamentDeveloperLogins\FilamentDeveloperLoginsPlugin;
@@ -43,11 +44,11 @@ class AppPanelProvider extends PanelProvider
             ->registration(InvitationRegister::class)
             ->tenantMenuItems([
                 Action::make('profile')
-                    ->url(fn(): string => EditOrganizationProfile::getUrl())
+                    ->url(fn (): string => EditOrganizationProfile::getUrl())
                     ->label('Organization Profile')
                     ->icon('heroicon-m-cog-8-tooth'),
                 Action::make('users')
-                    ->url(fn(): string => UserCluster::getUrl())
+                    ->url(fn (): string => UserCluster::getUrl())
                     ->label('Users')
                     ->icon('heroicon-m-users'),
 
@@ -74,18 +75,18 @@ class AppPanelProvider extends PanelProvider
                     ->shouldRegisterNavigation(false)
                     ->shouldShowDeleteAccountForm(false),
                 FilamentDeveloperLoginsPlugin::make()
-                    ->enabled(!app()->isProduction())
-                    ->users(fn() => User::query()
+                    ->enabled(! app()->isProduction())
+                    ->users(fn () => User::query()
                         ->pluck('email', 'name')
                         ->toArray()),
             ])
             ->userMenuItems([
                 'profile' => Action::make('profile')
-                    ->label(fn() => auth()->user()->name)
+                    ->label(fn () => auth()->user()->name)
                     ->visible(function (): bool {
                         return auth()->user()->organizations()->exists() && Filament::getTenant();
                     })
-                    ->url(fn(): string => EditProfilePage::getUrl())
+                    ->url(fn (): string => EditProfilePage::getUrl())
                     ->icon('heroicon-m-user-circle'),
             ])
             ->middleware([
@@ -99,6 +100,9 @@ class AppPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            ->tenantMiddleware([
+                ApplyTenantScopes::class,
+            ], isPersistent: true)
             ->authMiddleware([
                 Authenticate::class,
             ]);
