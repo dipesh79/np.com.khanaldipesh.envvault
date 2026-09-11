@@ -35,7 +35,7 @@ class AppPanelProvider extends PanelProvider
             ->id('app')
             ->path('app')
             ->login()
-            ->tenant(Organization::class,slugAttribute: 'slug')
+            ->tenant(Organization::class, slugAttribute: 'slug')
             ->tenantRegistration(RegisterOrganization::class)
             ->tenantProfile(EditOrganizationProfile::class)
             ->registration()
@@ -46,6 +46,7 @@ class AppPanelProvider extends PanelProvider
             ])
             ->discoverResources(in: app_path('Filament/App/Resources'), for: 'App\Filament\App\Resources')
             ->discoverPages(in: app_path('Filament/App/Pages'), for: 'App\Filament\App\Pages')
+            ->discoverClusters(in: app_path('Filament/App/Clusters'), for: 'App\Filament\App\Clusters')
             ->pages([
                 Dashboard::class,
             ])
@@ -60,18 +61,18 @@ class AppPanelProvider extends PanelProvider
                     ->shouldRegisterNavigation(false)
                     ->shouldShowDeleteAccountForm(false),
                 FilamentDeveloperLoginsPlugin::make()
-                    ->enabled(!app()->isProduction())
-                    ->users(fn() => User::query()
+                    ->enabled(! app()->isProduction())
+                    ->users(fn () => User::query()
                         ->pluck('email', 'name')
                         ->toArray()),
             ])
             ->userMenuItems([
                 'profile' => Action::make('profile')
-                    ->label(fn() => auth()->user()->name)
+                    ->label(fn () => auth()->user()->name)
                     ->visible(function (): bool {
                         return auth()->user()->organizations()->exists() && Filament::getTenant();
                     })
-                    ->url(fn(): string => EditProfilePage::getUrl())
+                    ->url(fn (): string => EditProfilePage::getUrl())
                     ->icon('heroicon-m-user-circle'),
             ])
             ->middleware([
