@@ -26,25 +26,6 @@ class TeamInfolist
                             ->columnSpan(2),
                     ]),
 
-                Section::make('Members')
-                    ->description('Users assigned to this team')
-                    ->icon('heroicon-o-users')
-                    ->columns(2)
-                    ->schema([
-                        RepeatableEntry::make('users')
-                            ->label('Users')
-                            ->schema([
-                                TextEntry::make('name')
-                                    ->label('Name')
-                                    ->weight('bold'),
-                                TextEntry::make('email')
-                                    ->label('Email')
-                                    ->color('gray'),
-                            ])
-                            ->columns(2)
-                            ->columnSpan(2),
-                    ]),
-
                 Section::make('Timestamps')
                     ->description('Creation and update timestamps')
                     ->icon('heroicon-o-clock')
@@ -66,6 +47,26 @@ class TeamInfolist
                             ->color('gray')
                             ->placeholder('-')
                             ->columnSpan(1),
+                    ]),
+
+                Section::make('Members')
+                    ->description('Users assigned to this team')
+                    ->icon('heroicon-o-users')
+                    ->columnSpanFull()
+                    ->columns(2)
+                    ->schema([
+                        RepeatableEntry::make('users')
+                            ->label('Users')
+                            ->schema([
+                                TextEntry::make('name')
+                                    ->label('Name')
+                                    ->weight('bold'),
+                                TextEntry::make('email')
+                                    ->label('Email')
+                                    ->color('gray'),
+                            ])
+                            ->columns(2)
+                            ->columnSpan(2),
                     ]),
             ]);
     }

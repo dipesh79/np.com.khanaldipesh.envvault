@@ -14,6 +14,11 @@ class EditOrganizationProfile extends EditTenantProfile
         return 'Organization';
     }
 
+    public static function canAccess(): bool
+    {
+        return canAccessOrganization();
+    }
+
     public function form(Schema $schema): Schema
     {
         return $schema

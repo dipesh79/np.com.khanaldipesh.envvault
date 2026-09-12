@@ -18,7 +18,8 @@ class EditEnvironment extends EditRecord
     {
         return [
             ViewAction::make(),
-            DeleteAction::make(),
+            DeleteAction::make()
+                ->visible(fn($record) => canAccessEnvironment($record)),
         ];
     }
 }

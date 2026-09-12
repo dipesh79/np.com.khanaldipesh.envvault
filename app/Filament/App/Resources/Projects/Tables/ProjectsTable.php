@@ -60,15 +60,18 @@ class ProjectsTable
                     ->icon('heroicon-o-eye'),
                 EditAction::make()
                     ->label('Edit')
+                    ->visible(canAccessOrganization())
                     ->icon('heroicon-o-pencil-square'),
                 DeleteAction::make()
                     ->label('Delete')
+                    ->visible(canAccessOrganization())
                     ->icon('heroicon-o-trash')
                     ->requiresConfirmation(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
+                        ->visible(canAccessOrganization())
                         ->label('Delete Selected')
                         ->icon('heroicon-o-trash')
                         ->requiresConfirmation(),

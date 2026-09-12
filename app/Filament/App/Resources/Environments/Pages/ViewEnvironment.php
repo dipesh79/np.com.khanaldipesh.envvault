@@ -23,6 +23,7 @@ class ViewEnvironment extends ViewRecord
             Action::make('import')
                 ->label('Import')
                 ->icon('heroicon-o-arrow-down-tray')
+                ->visible(fn($record) => canAccessEnvironment($record))
                 ->schema([
                     Textarea::make('env')
                         ->helperText('Paste your environment variables here')
@@ -51,11 +52,12 @@ class ViewEnvironment extends ViewRecord
                         ->title('Environment variables imported')
                         ->success()
                         ->send();
+                    $this->redirect($this->getResource()::getUrl('view', ['record' => $this->record]));
                 }),
             Action::make('export')
                 ->label('Export')
                 ->icon('heroicon-o-arrow-up-tray')
-                ->modalSubmitAction(false) // no "confirm" button needed, it's just a viewer
+                ->modalSubmitAction(false)
                 ->modalCancelActionLabel('Close')
                 ->schema([
                     Textarea::make('env')
@@ -73,10 +75,10 @@ class ViewEnvironment extends ViewRecord
                             return $envString;
                         }),
                 ]),
-
-
-            EditAction::make(),
-            DeleteAction::make(),
+            EditAction::make()
+                ->visible(fn($record) => canAccessEnvironment($record)),
+            DeleteAction::make()
+                ->visible(fn($record) => canAccessEnvironment($record)),
         ];
     }
 }

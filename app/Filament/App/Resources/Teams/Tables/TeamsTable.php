@@ -54,9 +54,11 @@ class TeamsTable
                     ->icon('heroicon-o-eye'),
                 EditAction::make()
                     ->label('Edit')
+                    ->visible(fn () => canAccessOrganization())
                     ->icon('heroicon-o-pencil-square'),
                 DeleteAction::make()
                     ->label('Delete')
+                    ->visible(fn () => canAccessOrganization())
                     ->icon('heroicon-o-trash')
                     ->requiresConfirmation(),
             ])
@@ -65,6 +67,7 @@ class TeamsTable
                     DeleteBulkAction::make()
                         ->label('Delete Selected')
                         ->icon('heroicon-o-trash')
+                        ->visible(fn () => canAccessOrganization())
                         ->requiresConfirmation(),
                 ]),
             ])
