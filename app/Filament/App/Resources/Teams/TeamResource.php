@@ -15,6 +15,8 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 class TeamResource extends Resource
@@ -32,6 +34,14 @@ class TeamResource extends Resource
     public static function getNavigationBadge(): ?string
     {
         return (string) self::getEloquentQuery()->count();
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->whereHas('users', function ($query) {
+                $query->where('user_id', auth()->id());
+            });
     }
 
     public static function form(Schema $schema): Schema
@@ -62,5 +72,20 @@ class TeamResource extends Resource
             'view' => ViewTeam::route('/{record}'),
             'edit' => EditTeam::route('/{record}/edit'),
         ];
+    }
+
+    public static function canCreate(): bool
+    {
+        return canAccessOrganization();
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return canAccessOrganization();
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return canAccessOrganization();
     }
 }

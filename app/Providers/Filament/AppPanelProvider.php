@@ -46,8 +46,10 @@ class AppPanelProvider extends PanelProvider
                 Action::make('profile')
                     ->url(fn (): string => EditOrganizationProfile::getUrl())
                     ->label('Organization Profile')
+                    ->visible(fn (): bool => canAccessOrganization())
                     ->icon('heroicon-m-cog-8-tooth'),
                 Action::make('users')
+                    ->visible(fn (): bool => canAccessOrganization())
                     ->url(fn (): string => UserCluster::getUrl())
                     ->label('Users')
                     ->icon('heroicon-m-users'),

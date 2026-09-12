@@ -63,6 +63,7 @@ class EnvironmentsTable
                 Action::make('import')
                     ->label('Import')
                     ->icon('heroicon-o-arrow-path')
+                    ->visible(fn ($record) => canAccessEnvironment($record))
                     ->schema([
                         Textarea::make('env')
                             ->helperText('Paste your environment variables here')
@@ -72,11 +73,11 @@ class EnvironmentsTable
                             ->rows(10)
                             ->required(),
                     ])
-                    ->action(function ($data) {
+                    ->action(function ($data, Environment $record) {
                         DB::beginTransaction();
                         try {
                             $app = app(ImportEnvVariable::class);
-                            $app->import($data['env'], $this->record);
+                            $app->import($data['env'], $record);
                         } catch (\Exception $e) {
                             DB::rollBack();
                             Notification::make('error')
@@ -84,6 +85,7 @@ class EnvironmentsTable
                                 ->body($e->getMessage())
                                 ->danger()
                                 ->send();
+
                             return;
                         }
                         DB::commit();
@@ -105,11 +107,12 @@ class EnvironmentsTable
                                 $environmentVariables = $record->environmentValues;
                                 $envString = '';
                                 foreach ($environmentVariables as $variable) {
-                                    $envString .= $variable->key . '=' . $variable->value . PHP_EOL;
+                                    $envString .= $variable->key.'='.$variable->value.PHP_EOL;
                                     if ($variable->gap_after) {
                                         $envString .= PHP_EOL;
                                     }
                                 }
+
                                 return $envString;
                             }),
                     ]),
@@ -118,8 +121,10 @@ class EnvironmentsTable
                     ->icon('heroicon-o-eye'),
                 EditAction::make()
                     ->label('Edit')
+                    ->visible(fn ($record) => canAccessEnvironment($record))
                     ->icon('heroicon-o-pencil-square'),
                 DeleteAction::make()
+                    ->visible(fn ($record) => canAccessEnvironment($record))
                     ->label('Delete')
                     ->icon('heroicon-o-trash')
                     ->requiresConfirmation(),

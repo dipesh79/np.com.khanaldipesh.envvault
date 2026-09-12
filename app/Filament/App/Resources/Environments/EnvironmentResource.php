@@ -15,6 +15,8 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class EnvironmentResource extends Resource
 {
@@ -31,6 +33,23 @@ class EnvironmentResource extends Resource
     public static function getNavigationBadge(): ?string
     {
         return (string)static::getEloquentQuery()->count();
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        if (canAccessOrganization()) {
+            return parent::getEloquentQuery();
+        }
+
+        return parent::getEloquentQuery()
+            ->whereHas('project', function ($projectQuery) {
+                $projectQuery->whereHas('teams', function ($teamQuery) {
+                    $teamQuery->whereHas('users', function ($userQuery) {
+                        $userQuery->where('user_id', auth()->id());
+                    });
+                });
+            });
+
     }
 
     public static function form(Schema $schema): Schema
@@ -61,5 +80,15 @@ class EnvironmentResource extends Resource
             'view' => ViewEnvironment::route('/{record}'),
             'edit' => EditEnvironment::route('/{record}/edit'),
         ];
+    }
+
+    public static function canCreate(): bool
+    {
+        return canAccessOrganization();
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return canAccessEnvironment($record);
     }
 }

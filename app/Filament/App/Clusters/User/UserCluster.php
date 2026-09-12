@@ -11,4 +11,9 @@ class UserCluster extends Cluster
     protected static bool $shouldRegisterNavigation = false;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Users;
+
+    public static function canAccess(): bool
+    {
+        return canAccessOrganization();
+    }
 }

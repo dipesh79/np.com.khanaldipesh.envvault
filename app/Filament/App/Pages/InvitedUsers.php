@@ -31,6 +31,11 @@ class InvitedUsers extends Page implements HasTable
 
     protected string $view = 'filament.app.pages.invited-users';
 
+    public static function canAccess(): bool
+    {
+        return canAccessOrganization();
+    }
+
     public function table(Table $table): Table
     {
         return $table
@@ -69,6 +74,7 @@ class InvitedUsers extends Page implements HasTable
                     ->icon('heroicon-o-trash')
                     ->color('danger')
                     ->requiresConfirmation()
+                    ->visible(fn () => canAccessOrganization())
                     ->action(function ($record) {
                         $record->delete();
 
@@ -82,6 +88,7 @@ class InvitedUsers extends Page implements HasTable
                 BulkActionGroup::make([
                     BulkAction::make('delete')
                         ->requiresConfirmation()
+                        ->visible(fn () => canAccessOrganization())
                         ->color('danger')
                         ->icon('heroicon-o-trash')
                         ->deselectRecordsAfterCompletion()

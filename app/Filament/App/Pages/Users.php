@@ -36,6 +36,11 @@ class Users extends Page implements HasTable
 
     protected ?string $subheading = 'Manage users';
 
+    public static function canAccess(): bool
+    {
+        return canAccessOrganization();
+    }
+
     public function table(Table $table): Table
     {
         return $table

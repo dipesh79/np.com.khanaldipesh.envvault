@@ -32,33 +32,6 @@ class ProjectInfolist
                             ->columnSpan(1),
                     ]),
 
-                Section::make('Teams')
-                    ->description('Teams assigned to this project')
-                    ->icon('heroicon-o-user-group')
-                    ->columns(2)
-                    ->schema([
-                        RepeatableEntry::make('teams')
-                            ->label('Teams')
-                            ->schema([
-                                TextEntry::make('name')
-                                    ->label('Name')
-                                    ->weight('bold'),
-
-                                TextEntry::make('pivot.role')
-                                    ->label('Role')
-                                    ->badge()
-                                    ->formatStateUsing(fn ($state): string => ucfirst(is_string($state) ? $state : $state->value))
-                                    ->color(fn ($state): string => match (is_string($state) ? $state : $state->value) {
-                                        'admin' => 'success',
-                                        'editor' => 'warning',
-                                        'viewer' => 'info',
-                                        default => 'gray',
-                                    }),
-                            ])
-                            ->columns()
-                            ->columnSpan(2),
-                    ]),
-
                 Section::make('Timestamps')
                     ->description('Creation and update timestamps')
                     ->icon('heroicon-o-clock')
@@ -80,6 +53,34 @@ class ProjectInfolist
                             ->color('gray')
                             ->placeholder('-')
                             ->columnSpan(1),
+                    ]),
+
+                Section::make('Teams')
+                    ->description('Teams assigned to this project')
+                    ->icon('heroicon-o-user-group')
+                    ->columns(2)
+                    ->columnSpanFull()
+                    ->schema([
+                        RepeatableEntry::make('teams')
+                            ->label('Teams')
+                            ->schema([
+                                TextEntry::make('name')
+                                    ->label('Name')
+                                    ->weight('bold'),
+
+                                TextEntry::make('pivot.role')
+                                    ->label('Role')
+                                    ->badge()
+                                    ->formatStateUsing(fn ($state): string => ucfirst(is_string($state) ? $state : $state->value))
+                                    ->color(fn ($state): string => match (is_string($state) ? $state : $state->value) {
+                                        'admin' => 'success',
+                                        'editor' => 'warning',
+                                        'viewer' => 'info',
+                                        default => 'gray',
+                                    }),
+                            ])
+                            ->columns()
+                            ->columnSpan(2),
                     ]),
             ]);
     }
