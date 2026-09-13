@@ -78,6 +78,148 @@ You will get a magic login link on the local environment for both admin and app 
 | `composer run dev` | Start the Vite dev server |
 | `composer run test` | Run the Pest test suite |
 
+## Docker
+
+EnvVault ships with a Docker Compose setup for quick local development and self-hosting.
+
+### Quick Start
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd envvault
+
+# Copy the Docker environment file
+cp .env.docker .env
+
+# Start all services (app, MySQL, Redis)
+docker compose up -d
+
+# Generate the application key
+docker compose exec app php artisan key:generate
+
+# Run migrations and seed the database
+docker compose exec app php artisan migrate --seed
+```
+
+The app will be available at `http://localhost:8000`.
+
+### Services
+
+| Service | Container | Port | Purpose |
+|---|---|---|---|
+| App | `envvault-app` | `8000` | Laravel application (FrankenPHP) |
+| MySQL | `envvault-mysql` | `3307` (host) / `3306` (container) | Database |
+| Redis | `envvault-redis` | `6379` | Cache & sessions |
+
+### Configuration
+
+The Docker environment is configured via `.env.docker`. Key settings:
+
+```env
+# Database
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=envvault
+DB_USERNAME=dipesh
+DB_PASSWORD=dipesh
+
+# Redis
+REDIS_HOST=redis
+REDIS_PORT=6379
+
+# Application
+APP_URL=http://localhost:8000
+APP_DEBUG=true
+```
+
+**Changing MySQL credentials:** Update `MYSQL_USER`, `MYSQL_PASSWORD`, and `MYSQL_ROOT_PASSWORD` in `docker-compose.yml`, then match them in `.env.docker`.
+
+**Changing ports:** Edit the `ports` mapping in `docker-compose.yml`. For example, to use port `8080` for the app:
+```yaml
+ports:
+  - "8080:8000"
+```
+
+### Production Deployment
+
+For production, create a production `.env` based on `.env.docker` with these changes:
+
+```env
+APP_ENV=production
+APP_DEBUG=false
+APP_KEY=<your-generated-key>
+APP_URL=https://your-domain.com
+
+# Use strong database credentials
+DB_PASSWORD=<strong-password>
+```
+
+Generate a real application key:
+```bash
+docker compose exec app php artisan key:generate
+```
+
+Run migrations without seeding:
+```bash
+docker compose exec app php artisan migrate --force
+```
+
+### Common Commands
+
+```bash
+# View logs
+docker compose logs -f app
+
+# Stop all services
+docker compose down
+
+# Stop and remove volumes (fresh start)
+docker compose down -v
+
+# Rebuild after code changes
+docker compose up -d --build
+
+# Run Artisan commands
+docker compose exec app php artisan <command>
+
+# Open a shell in the app container
+docker compose exec app bash
+
+# Run tests
+docker compose exec app php artisan test
+```
+
+### Troubleshooting
+
+**Port already in use:**
+If `3307` or `6379` are taken, change the host port in `docker-compose.yml`:
+```yaml
+mysql:
+  ports:
+    - "3308:3306"  # Use 3308 instead
+```
+
+**Permission errors on storage:**
+```bash
+docker compose exec app chown -R www-data:www-data storage bootstrap/cache
+```
+
+**Database connection refused:**
+Ensure MySQL is healthy before the app starts:
+```bash
+docker compose ps  # Check mysql health status
+docker compose up -d  # Restart services
+```
+
+**Reset everything:**
+```bash
+docker compose down -v  # Remove containers and volumes
+docker compose up -d --build  # Rebuild from scratch
+docker compose exec app php artisan migrate --seed
+```
+
 ## Project Structure
 
 ```

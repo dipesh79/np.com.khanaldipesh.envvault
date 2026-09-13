@@ -17,11 +17,11 @@
                     EnvVault is designed to be self-hosted. Run it on your own server and keep complete control over your team's environment configuration.
                 </p>
                 <div class="mt-8 flex items-center gap-4">
-                    <span class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-500 shadow-sm">
+                    <span class="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-5 py-2.5 text-sm font-semibold text-emerald-700 shadow-sm">
                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                         </svg>
-                        Coming Soon
+                        Available Now
                     </span>
                     <div class="flex items-center gap-3 text-sm text-slate-600">
                         <div class="flex items-center gap-2">
@@ -34,7 +34,7 @@
                             <svg class="h-4 w-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                             </svg>
-                            SQLite / MySQL
+                            MySQL + Redis
                         </div>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                         <h3 class="text-sm font-semibold uppercase tracking-wider text-slate-500">Architecture</h3>
                     </div>
 
-                    <div class="rounded-xl border border-slate-100 bg-slate-50/50 p-6">
+                            <div class="rounded-xl border border-slate-100 bg-slate-50/50 p-6">
                         <div class="font-mono text-sm leading-loose">
                             <div class="rounded-xl border border-slate-200 bg-white p-3 text-center font-medium text-slate-700 shadow-sm">
                                 <svg class="mx-auto mb-1 h-5 w-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -68,20 +68,24 @@
                                 <svg class="mx-auto mb-1 h-5 w-5 text-teal-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
                                 </svg>
-                                EnvVault
+                                EnvVault (Docker)
                             </div>
                             <div class="ml-8 mt-3 space-y-2 border-l-2 border-teal-200 pl-6">
                                 <div class="flex items-center gap-2 rounded-lg border border-slate-100 bg-white px-3 py-2 text-slate-600 shadow-sm">
                                     <span class="h-2 w-2 rounded-full bg-red-400"></span>
-                                    Laravel
+                                    Laravel + PHP 8.3
                                 </div>
                                 <div class="flex items-center gap-2 rounded-lg border border-slate-100 bg-white px-3 py-2 text-slate-600 shadow-sm">
                                     <span class="h-2 w-2 rounded-full bg-blue-400"></span>
-                                    Database
+                                    MySQL 8.0
+                                </div>
+                                <div class="flex items-center gap-2 rounded-lg border border-slate-100 bg-white px-3 py-2 text-slate-600 shadow-sm">
+                                    <span class="h-2 w-2 rounded-full bg-amber-400"></span>
+                                    Redis 7
                                 </div>
                                 <div class="flex items-center gap-2 rounded-lg border border-slate-100 bg-white px-3 py-2 text-slate-600 shadow-sm">
                                     <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
-                                    Secure Storage
+                                    Encrypted Storage
                                 </div>
                             </div>
                         </div>
