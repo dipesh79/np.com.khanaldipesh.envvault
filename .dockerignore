@@ -1,0 +1,63 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Dependencies (will be installed in container)
+node_modules
+vendor
+
+# Environment files
+.env
+.env.*
+!.env.example
+!.env.docker
+
+# IDE files
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+storage/logs/*.log
+storage/logs/*.pid
+
+# Cache
+storage/framework/cache/*.php
+storage/framework/sessions/*.php
+storage/framework/views/*.php
+bootstrap/cache/*.php
+
+# Test files
+phpunit.xml
+tests
+
+# Documentation
+*.md
+LICENSE
+
+# Build files
+# Keep composer.lock and package-lock.json for reproducible builds
+
+# Docker files (don't include in context)
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Node
+npm-debug.log
+yarn-error.log
+
+# Misc
+boost.json
+opencode.json
+.claude
+.codex
+.junie
+.mcp.json
