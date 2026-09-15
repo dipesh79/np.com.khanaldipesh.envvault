@@ -33,11 +33,14 @@ class TeamResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return (string) self::getEloquentQuery()->count();
+        return (string)self::getEloquentQuery()->count();
     }
 
     public static function getEloquentQuery(): Builder
     {
+        if (canAccessOrganization()) {
+            return parent::getEloquentQuery();
+        }
         return parent::getEloquentQuery()
             ->whereHas('users', function ($query) {
                 $query->where('user_id', auth()->id());
