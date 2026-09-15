@@ -92,7 +92,7 @@ cd envvault
 # Copy the Docker environment file
 cp .env.docker .env
 
-# Start all services (app, MySQL, Redis)
+# Start all services (app, MySQL, Redis, Scheduler)
 docker compose up -d
 
 # Generate the application key
@@ -111,6 +111,7 @@ The app will be available at `http://localhost:8000`.
 | App | `envvault-app` | `8000` | Laravel application (FrankenPHP) |
 | MySQL | `envvault-mysql` | `3307` (host) / `3306` (container) | Database |
 | Redis | `envvault-redis` | `6379` | Cache & sessions |
+| Scheduler | `envvault-scheduler` | - | Runs scheduled tasks (`schedule:run` every minute) |
 
 ### Configuration
 
@@ -166,11 +167,22 @@ Run migrations without seeding:
 docker compose exec app php artisan migrate --force
 ```
 
+### Cron Job Setup
+
+The scheduler runs queued jobs automatically. Add a cron entry on your server:
+
+```bash
+* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+```
+
 ### Common Commands
 
 ```bash
 # View logs
 docker compose logs -f app
+
+# View scheduler logs
+docker compose logs -f scheduler
 
 # Stop all services
 docker compose down
