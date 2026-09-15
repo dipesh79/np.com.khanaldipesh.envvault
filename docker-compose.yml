@@ -57,6 +57,26 @@ services:
       - envvault
     restart: unless-stopped
 
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: envvault-scheduler
+    command: sh -c "while true; do php artisan schedule:run --verbose --no-interaction & sleep 60; done"
+    volumes:
+      - .:/app
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - envvault
+    restart: unless-stopped
+
 volumes:
   mysql-data:
   redis-data:
