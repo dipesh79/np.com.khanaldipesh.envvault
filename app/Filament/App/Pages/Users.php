@@ -44,7 +44,7 @@ class Users extends Page implements HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(OrganizationUser::query()->where('organization_user.organization_id', Filament::getTenant()->id))
+            ->query(OrganizationUser::query()->where('organization_user.organization_id', Filament::getTenant()->id)->with(['user', 'organization']))
             ->columns([
                 TextColumn::make('user.name')
                     ->searchable()
@@ -87,10 +87,11 @@ class Users extends Page implements HasTable
                         $record->delete();
                         $record->organization->users()->detach($record->user_id);
 
-                        $teams = Team::where('organization_id', $record->organization_id)->get();
-                        foreach ($teams as $team) {
-                            $team->users()->detach($record->user_id);
-                        }
+                        $teamIds = Team::where('organization_id', $record->organization_id)->pluck('id');
+                        DB::table('team_user')
+                            ->whereIn('team_id', $teamIds)
+                            ->where('user_id', $record->user_id)
+                            ->delete();
 
                         Notification::make('success')
                             ->title('User removed from organization')
@@ -139,11 +140,13 @@ class Users extends Page implements HasTable
                         ->required(fn ($get) => $get('existing_user'))
                         ->hidden(fn ($get) => ! $get('existing_user'))
                         ->options(function () {
-                            $users = User::all()->pluck('email', 'id')->toArray();
-                            $existingUsers = OrganizationUser::where('organization_id',
+                            $existingUserIds = OrganizationUser::where('organization_id',
                                 Filament::getTenant()->id)->pluck('user_id')->toArray();
 
-                            return array_diff_key($users, array_flip($existingUsers));
+                            return User::select('id', 'email')
+                                ->whereNotIn('id', $existingUserIds)
+                                ->pluck('email', 'id')
+                                ->toArray();
                         })
                         ->searchable(),
                     TextInput::make('email')

@@ -37,10 +37,11 @@ class ProjectResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         if (canAccessOrganization()) {
-            return parent::getEloquentQuery();
+            return parent::getEloquentQuery()->with('owner');
         }
 
         return parent::getEloquentQuery()
+            ->with('owner')
             ->whereHas('teams', function ($teamQuery) {
                 $teamQuery->whereHas('users', function ($userQuery) {
                     $userQuery->where('user_id', auth()->id());

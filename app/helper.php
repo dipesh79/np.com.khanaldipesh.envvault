@@ -11,40 +11,44 @@ use Filament\Facades\Filament;
 if (! function_exists('canAccessOrganization')) {
     function canAccessOrganization(): bool
     {
-        /** @var Organization $organization */
-        $organization = Filament::getTenant();
-        $organizationUser = OrganizationUser::where('organization_id', $organization->id)
-            ->where('user_id', auth()->id())
-            ->first();
-        if (! $organizationUser) {
-            return false;
-        }
-        if (
-            auth()->id() === $organization->owner_id ||
-            $organizationUser->role === OrganizationUserRole::OWNER->value ||
-            $organizationUser->role === OrganizationUserRole::ADMIN->value
-        ) {
-            return true;
-        }
+        return once(function (): bool {
+            /** @var Organization $organization */
+            $organization = Filament::getTenant();
+            $organizationUser = OrganizationUser::where('organization_id', $organization->id)
+                ->where('user_id', auth()->id())
+                ->first();
+            if (! $organizationUser) {
+                return false;
+            }
+            if (
+                auth()->id() === $organization->owner_id ||
+                $organizationUser->role === OrganizationUserRole::OWNER->value ||
+                $organizationUser->role === OrganizationUserRole::ADMIN->value
+            ) {
+                return true;
+            }
 
-        return false;
+            return false;
+        });
     }
 
     if (! function_exists('canAccessProject')) {
         function canAccessProject(Project $project): bool
         {
-            if (canAccessOrganization()) {
-                return true;
-            }
+            return once(function () use ($project): bool {
+                if (canAccessOrganization()) {
+                    return true;
+                }
 
-            $userId = auth()->id();
+                $userId = auth()->id();
 
-            return $project->projectTeams()
-                ->whereHas('team.users', function ($query) use ($userId) {
-                    $query->where('users.id', $userId);
-                })
-                ->whereIn('role', [ProjectTeamRole::ADMIN->value, ProjectTeamRole::EDITOR->value])
-                ->exists();
+                return $project->projectTeams()
+                    ->whereHas('team.users', function ($query) use ($userId) {
+                        $query->where('users.id', $userId);
+                    })
+                    ->whereIn('role', [ProjectTeamRole::ADMIN->value, ProjectTeamRole::EDITOR->value])
+                    ->exists();
+            });
         }
     }
 

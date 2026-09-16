@@ -40,7 +40,7 @@ class InvitedUsers extends Page implements HasTable
     {
         return $table
             ->searchable(['email', 'invitee.name', 'inviter.name', 'role'])
-            ->query(Invitation::query()->where('invitations.organization_id', Filament::getTenant()->id))
+            ->query(Invitation::query()->where('invitations.organization_id', Filament::getTenant()->id)->with(['invitee', 'inviter']))
             ->columns([
                 TextColumn::make('invitee.name')
                     ->label('Invitee'),

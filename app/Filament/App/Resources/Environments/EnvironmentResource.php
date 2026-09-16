@@ -32,16 +32,17 @@ class EnvironmentResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return (string)static::getEloquentQuery()->count();
+        return (string) static::getEloquentQuery()->count();
     }
 
     public static function getEloquentQuery(): Builder
     {
         if (canAccessOrganization()) {
-            return parent::getEloquentQuery();
+            return parent::getEloquentQuery()->with('project');
         }
 
         return parent::getEloquentQuery()
+            ->with('project')
             ->whereHas('project', function ($projectQuery) {
                 $projectQuery->whereHas('teams', function ($teamQuery) {
                     $teamQuery->whereHas('users', function ($userQuery) {
