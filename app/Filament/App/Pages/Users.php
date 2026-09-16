@@ -103,6 +103,7 @@ class Users extends Page implements HasTable
                     ->color('warning')
                     ->icon('heroicon-o-arrow-right-on-rectangle')
                     ->hidden(fn ($record) => $record->organization->owner_id === $record->user_id)
+                    ->visible(fn ($record) => $record->organization->owner_id === auth()->id())
                     ->action(function ($record) {
                         $record->organization->update(['owner_id' => $record->user_id]);
                         $record->update(['role' => OrganizationUserRole::OWNER->value]);
