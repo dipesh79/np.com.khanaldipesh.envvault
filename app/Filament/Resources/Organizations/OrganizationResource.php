@@ -15,6 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class OrganizationResource extends Resource
@@ -32,6 +33,11 @@ class OrganizationResource extends Resource
     public static function getNavigationBadge(): ?string
     {
         return (string) self::getEloquentQuery()->count();
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with('owner');
     }
 
     public static function form(Schema $schema): Schema
